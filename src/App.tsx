@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import logo from './logo.svg';
-import './App.css';
+import styles from './styles';
 
 function App() {
+  const [message, setMessage] = useState<string>(''); 
+
+  useEffect(() => {
+    // Pobierz wiadomość z backendu
+    axios.get('https://localhost:44336/api/messages')
+      .then((response) => {
+        setMessage(response.data.message); // Zapisz wiadomość w stanie
+      })
+      .catch((error) => {
+        console.error('Error fetching message:', error);
+        setMessage('Failed to load message from backend');
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div style={styles.app}>
+      <header style={styles.appHeader}>
+        <img src={logo} style={styles.appLogo} alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          {message ? message : 'Loading message from backend...'}
         </p>
         <a
-          className="App-link"
+          style={styles.appLink}
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
