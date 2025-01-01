@@ -3,9 +3,16 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../context/useAuth";
 import { useForm } from "react-hook-form";
-import styles from "../styles/styles";
-
-type Props = {};
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  MenuItem,
+} from "@mui/material";
+import { styled } from "@mui/system";
+import { Link } from "react-router-dom";
+import styles from "../styles/styles"; // Import the styles
 
 type RegisterFormsInputs = {
   email: string;
@@ -15,22 +22,32 @@ type RegisterFormsInputs = {
   role: string;
 };
 
-const validation = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
-  password: Yup.string().required("Password is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
   role: Yup.string().required("Role is required"),
 });
 
-const Register = (props: Props) => {
+const GlassCard = styled(Box)({
+  background: "rgba(255, 255, 255, 0.1)",
+  backdropFilter: "blur(10px)",
+  borderRadius: "16px",
+  padding: "32px",
+  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+  width: "100%",
+  maxWidth: "500px",
+});
+
+const RegisterPage = () => {
   const { registerUser } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormsInputs>({
-    resolver: yupResolver(validation),
+    resolver: yupResolver(validationSchema),
   });
 
   const handleRegister = async (form: RegisterFormsInputs) => {
@@ -49,117 +66,189 @@ const Register = (props: Props) => {
   };
 
   return (
-    <div style={styles.app}>
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mb-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create an account
-            </h1>
-            <form
-              className="space-y-4 md:space-y-6"
-              onSubmit={handleSubmit(handleRegister)}
+    <div style={{ ...styles.app }} className="min-h-screen flex items-center justify-center">
+      <GlassCard>
+        <Typography variant="h4" align="center" gutterBottom style={{ color: "#fff", fontWeight: "bold" }}>
+          Create an Account
+        </Typography>
+        <form onSubmit={handleSubmit(handleRegister)}>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="First Name"
+              placeholder="Enter your first name"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.firstName}
+              helperText={errors.firstName?.message}
+              {...register("firstName")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Last Name"
+              placeholder="Enter your last name"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.lastName}
+              helperText={errors.lastName?.message}
+              {...register("lastName")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Email"
+              placeholder="Enter your email"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              {...register("email")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              {...register("password")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              select
+              variant="outlined"
+              label="Role"
+              placeholder="Select your role"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.role}
+              helperText={errors.role?.message}
+              {...register("role")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
             >
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Email
-                </label>
-                <input
-                  type="text"
-                  id="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Email"
-                  {...register("email")}
-                />
-                {errors.email && <p>{errors.email.message}</p>}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="First Name"
-                  {...register("firstName")}
-                />
-                {errors.firstName && <p>{errors.firstName.message}</p>}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Last Name"
-                  {...register("lastName")}
-                />
-                {errors.lastName && <p>{errors.lastName.message}</p>}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Role
-                </label>
-                <select
-                  id="role"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  {...register("role")}
-                >
-                  <option value="">Select a Role</option>
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
-                  <option value="Manager">Manager</option>
-                </select>
-                {errors.role && <p>{errors.role.message}</p>}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  {...register("password")}
-                />
-                {errors.password && <p>{errors.password.message}</p>}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full text-white bg-lightGreen hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Register
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
+              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="User">User</MenuItem>
+              <MenuItem value="Manager">Manager</MenuItem>
+            </TextField>
+          </Box>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            style={{
+              backgroundColor: "#fff",
+              color: "#000",
+              fontWeight: "bold",
+              padding: "10px 0",
+              borderRadius: "50px",
+            }}
+          >
+            Register
+          </Button>
+          <Typography
+            variant="body2"
+            align="center"
+            mt={2}
+            style={{ color: "#fff" }}
+          >
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              style={{
+                color: "#fff",
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Login
+            </Link>
+          </Typography>
+        </form>
+      </GlassCard>
     </div>
   );
 };
 
-export default Register;
+export default RegisterPage;

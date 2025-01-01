@@ -3,103 +3,166 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../context/useAuth";
 import { useForm } from "react-hook-form";
-import styles from "../styles/styles";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
+import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
-
-type Props = {};
+import styles from "../styles/styles"; // Import styles for background
 
 type LoginFormsInputs = {
   email: string;
   password: string;
 };
 
-const validation = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
   password: Yup.string().required("Password is required"),
 });
 
-const LoginPage = (props: Props) => {
-  const {loginUser} = useAuth();
-  const {register, 
+const GlassCard = styled(Box)({
+  background: "rgba(255, 255, 255, 0.1)",
+  backdropFilter: "blur(10px)",
+  borderRadius: "16px",
+  padding: "32px",
+  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+  width: "100%",
+  maxWidth: "400px",
+});
+
+const LoginPage = () => {
+  const { loginUser } = useAuth();
+  const {
+    register,
     handleSubmit,
-     formState: {errors}} = useForm<LoginFormsInputs>({
-    resolver: yupResolver(validation)
+    formState: { errors },
+  } = useForm<LoginFormsInputs>({
+    resolver: yupResolver(validationSchema),
   });
-  
-  const handleLogin =(form: LoginFormsInputs) => {
+
+  const handleLogin = (form: LoginFormsInputs) => {
     loginUser(form.email, form.password);
   };
 
-  return ( 
-    <div style={styles.app}>
-    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-      <div className="w-full bg-white rounded-lg shadow dark:border md:mb-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-            Sign in to your account
-          </h1>
-          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(handleLogin)}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Username
-              </label>
-              <input
-                type="text"
-                id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Username"
-                {...register("email")}
-              />
-              {errors.email ? <p>{errors.email.message}</p> : ""}
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                {...register("password")}
-              />
-              {errors.password ? <p>{errors.password.message}</p> : ""}
-            </div>
-            <div className="flex items-center justify-between">
-              <a
-                href="#"
-                className="text-sm text-white font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >
-                Forgot password?
-              </a>
-            </div>
-            <button
-              type="submit"
-              className="w-full text-white bg-lightGreen hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+  return (
+    <div style={{ ...styles.app }} className="min-h-screen flex items-center justify-center">
+      <GlassCard>
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          style={{ color: "#fff", fontWeight: "bold" }}
+        >
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Email"
+              placeholder="Enter your email"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              {...register("email")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              InputProps={{
+                style: { color: "#fff" },
+              }}
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              {...register("password")}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#fff",
+                  },
+                },
+              }}
+            />
+          </Box>
+          <Box display="flex" justifyContent="space-between" mb={2}>
+            <Link
+              to="#"
+              style={{
+                fontSize: "0.875rem",
+                color: "#fff",
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
             >
-              Sign in
-            </button>
-            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              Don’t have an account yet?{" "}
-              <Link
-              to="/register"
-              className="text-primary-600 hover:underline dark:text-primary-500 font-medium"
-            >
-              Sign up
+              Forgot Password?
             </Link>
-            </p>
-          </form>
-        </div>
-      </div>
+          </Box>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            style={{
+              backgroundColor: "#fff",
+              color: "#000",
+              fontWeight: "bold",
+              padding: "10px 0",
+              borderRadius: "50px",
+            }}
+          >
+            Login
+          </Button>
+          <Typography
+            variant="body2"
+            align="center"
+            mt={2}
+            style={{ color: "#fff" }}
+          >
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
+              style={{
+                color: "#fff",
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Register
+            </Link>
+          </Typography>
+        </form>
+      </GlassCard>
     </div>
-  </div>
-  )
+  );
 };
 
 export default LoginPage;
