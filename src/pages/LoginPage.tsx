@@ -3,6 +3,8 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../context/useAuth";
 import { useForm } from "react-hook-form";
+import styles from "../styles/styles";
+import { Link } from "react-router-dom";
 
 type Props = {};
 
@@ -29,7 +31,7 @@ const LoginPage = (props: Props) => {
   };
 
   return ( 
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <div style={styles.app}>
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <div className="w-full bg-white rounded-lg shadow dark:border md:mb-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -85,18 +87,18 @@ const LoginPage = (props: Props) => {
             </button>
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
               Don’t have an account yet?{" "}
-              <a
-                href="#"
-                className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >
-                Sign up
-              </a>
+              <Link
+              to="/register"
+              className="text-primary-600 hover:underline dark:text-primary-500 font-medium"
+            >
+              Sign up
+            </Link>
             </p>
           </form>
         </div>
       </div>
     </div>
-  </section>
+  </div>
   )
 };
 
