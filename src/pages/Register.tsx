@@ -1,143 +1,163 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import styles from '../styles/styles'; 
+import React from "react";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "../context/useAuth";
+import { useForm } from "react-hook-form";
 
-const Register: React.FC = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'User', // Default role; 
+type Props = {};
+
+type RegisterFormsInputs = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+};
+
+const validation = Yup.object().shape({
+  email: Yup.string().email().required("Email is required"),
+  password: Yup.string().required("Password is required"),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  role: Yup.string().required("Role is required"),
+});
+
+const Register = (props: Props) => {
+  const { registerUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormsInputs>({
+    resolver: yupResolver(validation),
   });
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Basic password confirmation validation
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match!');
-      return;
-    }
-
+  const handleRegister = async (form: RegisterFormsInputs) => {
     try {
-      const response = await axios.post('https://localhost:44336/api/Accounts/register', {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-      });
-
-      if (response.status === 200) {
-        setMessage(response.data.message);
-        setError('');
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          role: 'User',
-        });
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
-      setMessage('');
+      await registerUser(
+        form.email,
+        form.password,
+        form.firstName,
+        form.lastName,
+        form.role
+      );
+    } catch (error: any) {
+      console.error("Registration failed", error);
+      alert(error.response?.data || "An unexpected error occurred.");
     }
   };
 
   return (
-    <div style={styles.app}>
-      <div style={styles.formContainer}>
-        <h1 style={styles.formTitle}>Register</h1>
-        <form onSubmit={handleSubmit}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>First Name:</label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Last Name:</label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Confirm Password:</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Role:</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              required
-              style={styles.select}
+    <section className="bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mb-20 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Create an account
+            </h1>
+            <form
+              className="space-y-4 md:space-y-6"
+              onSubmit={handleSubmit(handleRegister)}
             >
-              <option value="User">User</option>
-              <option value="Admin">Admin</option>
-              <option value="Manager">Manager</option>
-            </select>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Email
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Email"
+                  {...register("email")}
+                />
+                {errors.email && <p>{errors.email.message}</p>}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="firstName"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="First Name"
+                  {...register("firstName")}
+                />
+                {errors.firstName && <p>{errors.firstName.message}</p>}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="lastName"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Last Name"
+                  {...register("lastName")}
+                />
+                {errors.lastName && <p>{errors.lastName.message}</p>}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="role"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Role
+                </label>
+                <select
+                  id="role"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  {...register("role")}
+                >
+                  <option value="">Select a Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                  <option value="Manager">Manager</option>
+                </select>
+                {errors.role && <p>{errors.role.message}</p>}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  {...register("password")}
+                />
+                {errors.password && <p>{errors.password.message}</p>}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full text-white bg-lightGreen hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Register
+              </button>
+            </form>
           </div>
-          <button type="submit" style={styles.button}>
-            Register
-          </button>
-        </form>
-        {message && <p style={styles.successMessage}>{message}</p>}
-        {error && <p style={styles.errorMessage}>{error}</p>}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
