@@ -74,6 +74,7 @@ export const UserProvider = ({children}: Props) => {
         }).catch((e) => toast.warning(e.message));
     };
 
+    
     const isLoggedIn = () => {
         return !!user;
     };
@@ -94,3 +95,4 @@ export const UserProvider = ({children}: Props) => {
 };
 
 export const useAuth = () => React.useContext(UserContext);
+

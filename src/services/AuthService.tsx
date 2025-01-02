@@ -35,3 +35,20 @@ export const registerAPI = async (email: string, password: string, firstName: st
         throw new Error(err.response.data.message);
     }
 }
+export const fetchUserDetails = async (email: string) => {
+    try {
+        const response = await axios.get(`${api}/Accounts/details`, { params: { email } });
+        return response.data;
+    } catch (err: any) {
+        throw new Error(err.response?.data?.message || "Failed to fetch user details");
+    }
+}
+
+export const getUserProfileAPI = async () => {
+    try {
+        const response = await axios.get(api + "/Accounts/profile");
+        return response.data;
+    } catch (err: any) {
+        throw new Error(err.response.data.message);
+    }
+};
