@@ -5,6 +5,7 @@ import Backend from './Backend';
 import NavBar from '../components/NavBar';
 import Register from './Register';
 import LoginPage from './LoginPage';
+import TicketPage from './TicketPage';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from '../context/useAuth';
@@ -22,6 +23,7 @@ const App: React.FC = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+      <Route path="/tickets" element={<ProtectedRoute><TicketPage /></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>
   </UserProvider>

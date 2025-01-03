@@ -15,6 +15,7 @@ const NavBar: React.FC = () => {
     <nav style={styles.nav}>
       <a href="/" style={styles.navLink}>Home</a>
       <a href="/backend" style={styles.navLink}>Backend</a>
+      <a href="/tickets" style={styles.navLink}>Tickets</a>
       {isAuthenticated && <a href="/profile" style={styles.navLink}>Profile</a>}
       {!isAuthenticated && <a href="/login" style={styles.navLink}>Login</a>}
       {!isAuthenticated && <a href="/register" style={styles.navLink}>Register</a>}
