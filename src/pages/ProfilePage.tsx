@@ -99,19 +99,7 @@ const ProfilePage: React.FC = () => {
           <Typography style={{ color: "#fff", fontWeight: "bold" }}>Role:</Typography>
           <Typography style={{ color: "#fff" }}>{userProfile.role || ""}</Typography>
         </Box>
-        <Button
-          type="button"
-          fullWidth
-          variant="contained"
-          style={{
-            backgroundColor: "#fff",
-            color: "#000",
-            fontWeight: "bold",
-            padding: "10px 0",
-            borderRadius: "50px",
-          }}
-          onClick={() => (window.location.href = "/")}
-        >
+        <Button style = {styles.button} onClick={() => (window.location.href = "/")}>
           Go Back Home
         </Button>
       </GlassCard>

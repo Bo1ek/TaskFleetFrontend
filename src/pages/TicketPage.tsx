@@ -11,20 +11,19 @@ import {
   Paper,
 } from "@mui/material";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import styles from "../styles/styles"; 
+import { Link, useNavigate } from "react-router-dom";
+import styles from "../styles/styles";
 
 const TicketPage: React.FC = () => {
   const [tickets, setTickets] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get(
-          "https://localhost:44336/api/Tickets"
-        );
+        const response = await axios.get("https://localhost:44336/api/Tickets");
         setTickets(response.data);
       } catch (err: any) {
         setError("Failed to fetch tickets.");
@@ -110,12 +109,17 @@ const TicketPage: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button
-        style={styles.button}
-        onClick={() => (window.location.href = "/")}
-      >
-        Go Back Home
-      </Button>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        <Button
+          style={styles.button}
+          onClick={() => (window.location.href = "/")}
+        >
+          Go Back Home
+        </Button>
+        <Button style={styles.button} onClick={() => navigate("/create-ticket")}>
+          Create Ticket
+        </Button>
+      </div>
     </div>
   );
 };

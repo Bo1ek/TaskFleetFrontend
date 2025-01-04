@@ -12,6 +12,7 @@ import { UserProvider } from '../context/useAuth';
 import ProtectedRoute from '../components/ProtectedRoute';
 import ProfilePage from './ProfilePage';
 import TicketDetailsPage from './TicketDetailsPage';
+import CreateTicketPage from './CreateTicketPage';
 
 const App: React.FC = () => {
   return (
@@ -26,7 +27,7 @@ const App: React.FC = () => {
       <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       <Route path="/tickets" element={<ProtectedRoute><TicketPage /></ProtectedRoute>} />
       <Route path="/tickets/:ticketId" element={<ProtectedRoute><TicketDetailsPage /></ProtectedRoute>} />
-      
+      <Route path="/create-ticket" element={<ProtectedRoute><CreateTicketPage /></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>
   </UserProvider>

@@ -124,7 +124,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 'bold',
     padding: '10px 0',
     borderRadius: '50px',
-    width: '100%',
+    width: '200px',
     maxWidth: '200px',
     marginTop: '30px',
   },

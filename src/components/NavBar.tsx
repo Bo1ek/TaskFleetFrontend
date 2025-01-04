@@ -20,10 +20,7 @@ const NavBar: React.FC = () => {
       {!isAuthenticated && <a href="/login" style={styles.navLink}>Login</a>}
       {!isAuthenticated && <a href="/register" style={styles.navLink}>Register</a>}
       {isAuthenticated && (<a href="#" style={styles.navLink}
-      onClick={(e) => { e.preventDefault(); logout();}}
-        >
-          Logout
-        </a>
+      onClick={(e) => { e.preventDefault(); logout();}}> Logout </a>
       )}
     </nav>
   );
