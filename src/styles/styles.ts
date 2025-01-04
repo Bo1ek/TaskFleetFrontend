@@ -119,17 +119,14 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
   },
   button: {
-    padding: '10px 20px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    borderRadius: '5px',
-    border: 'none',
-    cursor: 'pointer',
+    backgroundColor: '#fff',
+    color: '#000',
     fontWeight: 'bold',
-    textAlign: 'center',
-    width: 'auto', 
-    margin: '20px auto 0 auto', 
-    display: 'block',
+    padding: '10px 0',
+    borderRadius: '50px',
+    width: '100%',
+    maxWidth: '200px',
+    marginTop: '30px',
   },
   successMessage: {
     color: 'green',
@@ -138,7 +135,46 @@ const styles: Record<string, React.CSSProperties> = {
   errorMessage: {
     color: 'red',
     marginTop: '20px',
-  }
+  },
+  tableContainer: {
+    background: 'rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '16px',
+    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+    overflow: 'hidden',
+    width: '95%',
+    maxWidth: '1400px',
+  },
+  tableHeader: {
+    color: '#fff',
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  tableCell: {
+    color: '#fff',
+  },
+  link: {
+    color: '#00bfff',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+  },
+  glassCard: {
+    background: 'rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '16px',
+    padding: '32px',
+    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+    width: '100%',
+    maxWidth: '400px',
+  },
+  inputField: {
+    color: '#fff',
+    background: 'rgba(255,255,255,0.1)',
+  },
+  title: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   };
   
   export default styles;

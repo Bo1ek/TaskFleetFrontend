@@ -7,20 +7,9 @@ import {
   Checkbox,
   Box,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../styles/styles";
-
-const GlassCard = styled(Box)({
-  background: "rgba(255, 255, 255, 0.1)",
-  backdropFilter: "blur(10px)",
-  borderRadius: "16px",
-  padding: "32px",
-  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-  width: "100%",
-  maxWidth: "400px",
-});
 
 const TicketDetailsPage: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -64,62 +53,36 @@ const TicketDetailsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div
-        style={{ ...styles.app }}
-        className="min-h-screen flex items-center justify-center"
-      >
-        <GlassCard>
-          <Typography
-            variant="h4"
-            align="center"
-            gutterBottom
-            style={{ color: "#fff", fontWeight: "bold" }}
-          >
+      <div style={styles.app}>
+        <Box style={styles.glassCard}>
+          <Typography variant="h4" align="center" style={styles.title}>
             Loading Ticket Details...
           </Typography>
-        </GlassCard>
+        </Box>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div
-        style={{ ...styles.app }}
-        className="min-h-screen flex items-center justify-center"
-      >
-        <GlassCard>
-          <Typography
-            variant="h4"
-            align="center"
-            gutterBottom
-            style={{ color: "#fff", fontWeight: "bold" }}
-          >
+      <div style={styles.app}>
+        <Box style={styles.glassCard}>
+          <Typography variant="h4" align="center" style={styles.title}>
             {error}
           </Typography>
-        </GlassCard>
+        </Box>
       </div>
     );
   }
 
   return (
-    <div
-      style={{ ...styles.app }}
-      className="min-h-screen flex items-center justify-center"
-    >
-      <GlassCard>
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          style={{ color: "#fff", fontWeight: "bold" }}
-        >
+    <div style={styles.app}>
+      <Box style={styles.glassCard}>
+        <Typography variant="h4" align="center" style={styles.title}>
           Ticket Details
         </Typography>
         <Box mb={3}>
-          <Typography style={{ color: "#fff", fontWeight: "bold" }}>
-            Title:
-          </Typography>
+          <Typography style={styles.title}>Title:</Typography>
           <TextField
             fullWidth
             value={ticket.title || ""}
@@ -128,14 +91,12 @@ const TicketDetailsPage: React.FC = () => {
             }
             variant="outlined"
             InputProps={{
-              style: { color: "#fff", background: "rgba(255,255,255,0.1)" },
+              style: styles.inputField,
             }}
           />
         </Box>
         <Box mb={3}>
-          <Typography style={{ color: "#fff", fontWeight: "bold" }}>
-            Description:
-          </Typography>
+          <Typography style={styles.title}>Description:</Typography>
           <TextField
             fullWidth
             multiline
@@ -146,14 +107,12 @@ const TicketDetailsPage: React.FC = () => {
             }
             variant="outlined"
             InputProps={{
-              style: { color: "#fff", background: "rgba(255,255,255,0.1)" },
+              style: styles.inputField,
             }}
           />
         </Box>
         <Box mb={3}>
-          <Typography style={{ color: "#fff", fontWeight: "bold" }}>
-            Assigned User:
-          </Typography>
+          <Typography style={styles.title}>Assigned User:</Typography>
           <TextField
             fullWidth
             select
@@ -163,7 +122,7 @@ const TicketDetailsPage: React.FC = () => {
             }
             variant="outlined"
             InputProps={{
-              style: { color: "#fff", background: "rgba(255,255,255,0.1)" },
+              style: styles.inputField,
             }}
           >
             {users.map((user) => (
@@ -173,48 +132,33 @@ const TicketDetailsPage: React.FC = () => {
             ))}
           </TextField>
         </Box>
-        <Box mb={3}>
-          <Typography style={{ color: "#fff", fontWeight: "bold" }}>
-            Completed:
-          </Typography>
+        <Box mb={3} display="flex" alignItems="center" justifyContent="center" gap="10px">
+          <Typography style={styles.title}>Completed:</Typography>
           <Checkbox
             checked={ticket.isCompleted}
             onChange={(e) =>
               setTicket({ ...ticket, isCompleted: e.target.checked })
             }
-            style={{ color: "#fff" }}
+            style={{ color: "#fff", transform: "scale(1.5)" }} 
           />
         </Box>
-        <Box display="flex" justifyContent="space-between">
+        <Box display="flex" justifyContent="space-between" gap="10px">
           <Button
             variant="contained"
-            fullWidth
-            style={{
-              backgroundColor: "#fff",
-              color: "#000",
-              fontWeight: "bold",
-              borderRadius: "50px",
-              marginRight: "8px",
-            }}
+            style={styles.button}
             onClick={handleSave}
           >
             Save Changes
           </Button>
           <Button
             variant="contained"
-            fullWidth
-            style={{
-              backgroundColor: "#fff",
-              color: "#000",
-              fontWeight: "bold",
-              borderRadius: "50px",
-            }}
+            style={styles.button}
             onClick={() => navigate(-1)}
           >
             Go Back
           </Button>
         </Box>
-      </GlassCard>
+      </Box>
     </div>
   );
 };

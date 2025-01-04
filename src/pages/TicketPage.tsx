@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import styles from "../styles/styles";
+import styles from "../styles/styles"; 
 
 const TicketPage: React.FC = () => {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -41,31 +41,20 @@ const TicketPage: React.FC = () => {
   }
 
   if (error) {
-    return <Typography style={{ color: "red" }}>{error}</Typography>;
+    return <Typography style={styles.errorMessage}>{error}</Typography>;
   }
 
   return (
-    <div style={{ ...styles.app }} className="min-h-screen flex flex-col items-center">
+    <div style={styles.app}>
       <Typography
         variant="h4"
         align="center"
         gutterBottom
-        style={{ color: "#fff", fontWeight: "bold", marginBottom: "20px" }}
+        style={{ fontWeight: "bold", marginBottom: "20px" }}
       >
         Tickets
       </Typography>
-      <TableContainer
-        component={Paper}
-        style={{
-          background: "rgba(255, 255, 255, 0.1)",
-          backdropFilter: "blur(10px)",
-          borderRadius: "16px",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          overflow: "hidden",
-          width: "95%",
-          maxWidth: "1400px", 
-        }}
-      >
+      <TableContainer component={Paper} style={styles.tableContainer}>
         <Table>
           <TableHead>
             <TableRow>
@@ -79,14 +68,7 @@ const TicketPage: React.FC = () => {
                 "Due Date",
                 "Completed",
               ].map((header) => (
-                <TableCell
-                  key={header}
-                  style={{
-                    color: "#fff",
-                    fontWeight: "bold",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                  }}
-                >
+                <TableCell key={header} style={styles.tableHeader}>
                   {header}
                 </TableCell>
               ))}
@@ -95,39 +77,32 @@ const TicketPage: React.FC = () => {
           <TableBody>
             {tickets.map((ticket) => (
               <TableRow key={ticket.ticketId}>
-                <TableCell style={{ color: "#fff" }}>
-                  <Link
-                    to={`/tickets/${ticket.ticketId}`}
-                    style={{
-                      color: "#00bfff",
-                      textDecoration: "none",
-                      fontWeight: "bold",
-                    }}
-                  >
+                <TableCell style={styles.tableCell}>
+                  <Link to={`/tickets/${ticket.ticketId}`} style={styles.link}>
                     {ticket.title}
                   </Link>
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {ticket.description}
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {ticket.assignedUser
                     ? `${ticket.assignedUser.firstName} ${ticket.assignedUser.lastName}`
                     : "Unassigned"}
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {ticket.startLocation?.city || "N/A"}
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {ticket.endLocation?.city || "N/A"}
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {new Date(ticket.createdDate).toLocaleString()}
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {new Date(ticket.dueDate).toLocaleString()}
                 </TableCell>
-                <TableCell style={{ color: "#fff" }}>
+                <TableCell style={styles.tableCell}>
                   {ticket.isCompleted ? "Yes" : "No"}
                 </TableCell>
               </TableRow>
@@ -136,15 +111,7 @@ const TicketPage: React.FC = () => {
         </Table>
       </TableContainer>
       <Button
-        variant="contained"
-        style={{
-          backgroundColor: "#fff",
-          color: "#000",
-          fontWeight: "bold",
-          marginTop: "20px",
-          borderRadius: "50px",
-          padding: "10px 20px",
-        }}
+        style={styles.button}
         onClick={() => (window.location.href = "/")}
       >
         Go Back Home
