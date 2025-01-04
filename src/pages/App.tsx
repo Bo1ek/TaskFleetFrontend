@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from '../context/useAuth';
 import ProtectedRoute from '../components/ProtectedRoute';
 import ProfilePage from './ProfilePage';
+import TicketDetailsPage from './TicketDetailsPage';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,8 @@ const App: React.FC = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       <Route path="/tickets" element={<ProtectedRoute><TicketPage /></ProtectedRoute>} />
+      <Route path="/tickets/:ticketId" element={<ProtectedRoute><TicketDetailsPage /></ProtectedRoute>} />
+      
       </Routes>
       <ToastContainer/>
   </UserProvider>
