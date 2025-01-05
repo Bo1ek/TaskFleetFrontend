@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Table,
@@ -9,10 +9,11 @@ import {
   TableRow,
   Button,
   Paper,
-} from "@mui/material";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import styles from "../styles/styles";
+} from '@mui/material';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import styles from '../styles/styles';
+import Loading from '../components/Loading';
 
 const TicketPage: React.FC = () => {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -21,22 +22,26 @@ const TicketPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await axios.get("https://localhost:44336/api/Tickets");
-        setTickets(response.data);
-      } catch (err: any) {
-        setError("Failed to fetch tickets.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    const timer = setTimeout(() => {
+      const fetchTickets = async () => {
+        try {
+          const response = await axios.get('https://localhost:44336/api/Tickets');
+          setTickets(response.data);
+        } catch (err: any) {
+          setError('Failed to fetch tickets.');
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchTickets();
+      fetchTickets();
+    }, 2500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    return <Typography>Loading tickets...</Typography>;
+    return <Loading text="Loading tickets..." />;
   }
 
   if (error) {
@@ -44,84 +49,85 @@ const TicketPage: React.FC = () => {
   }
 
   return (
-    <div style={styles.app}>
-      <Typography
-        variant="h4"
-        align="center"
-        gutterBottom
-        style={{ fontWeight: "bold", marginBottom: "20px" }}
-      >
-        Tickets
-      </Typography>
-      <TableContainer component={Paper} style={styles.tableContainer}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {[
-                "Title",
-                "Description",
-                "Assigned User",
-                "Start Location",
-                "End Location",
-                "Created Date",
-                "Due Date",
-                "Completed",
-              ].map((header) => (
-                <TableCell key={header} style={styles.tableHeader}>
-                  {header}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tickets.map((ticket) => (
-              <TableRow key={ticket.ticketId}>
-                <TableCell style={styles.tableCell}>
-                  <Link to={`/tickets/${ticket.ticketId}`} style={styles.link}>
-                    {ticket.title}
-                  </Link>
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {ticket.description}
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {ticket.assignedUser
-                    ? `${ticket.assignedUser.firstName} ${ticket.assignedUser.lastName}`
-                    : "Unassigned"}
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {ticket.startLocation?.city || "N/A"}
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {ticket.endLocation?.city || "N/A"}
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {new Date(ticket.createdDate).toLocaleString()}
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {new Date(ticket.dueDate).toLocaleString()}
-                </TableCell>
-                <TableCell style={styles.tableCell}>
-                  {ticket.isCompleted ? "Yes" : "No"}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-        <Button
-          style={styles.button}
-          onClick={() => (window.location.href = "/")}
+      <div style={styles.app}>
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          style={{ fontWeight: "bold", marginBottom: "20px" }}
         >
-          Go Back Home
-        </Button>
-        <Button style={{...styles.button, backgroundColor: "green"}} onClick={() => navigate("/create-ticket")}>
-          Create Ticket
-        </Button>
+          Tickets
+        </Typography>
+        <TableContainer component={Paper} style={styles.tableContainer}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {[
+                  "Title",
+                  "Description",
+                  "Assigned User",
+                  "Start Location",
+                  "End Location",
+                  "Created Date",
+                  "Due Date",
+                  "Completed",
+                ].map((header) => (
+                  <TableCell key={header} style={styles.tableHeader}>
+                    {header}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tickets.map((ticket) => (
+                <TableRow key={ticket.ticketId}>
+                  <TableCell style={styles.tableCell}>
+                    <Link to={`/tickets/${ticket.ticketId}`} style={styles.link}>
+                      {ticket.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {ticket.description}
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {ticket.assignedUser
+                      ? `${ticket.assignedUser.firstName} ${ticket.assignedUser.lastName}`
+                      : "Unassigned"}
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {ticket.startLocation?.city || "N/A"}
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {ticket.endLocation?.city || "N/A"}
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {new Date(ticket.createdDate).toLocaleString()}
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {new Date(ticket.dueDate).toLocaleString()}
+                  </TableCell>
+                  <TableCell style={styles.tableCell}>
+                    {ticket.isCompleted ? "Yes" : "No"}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+          <Button
+            style={styles.button}
+            onClick={() => (window.location.href = "/")}
+          >
+            Go Back Home
+          </Button>
+          <Button style={{ ...styles.button, backgroundColor: "green" }} onClick={() => navigate("/create-ticket")}>
+            Create Ticket
+          </Button>
+        </div>
       </div>
-    </div>
   );
 };
 
 export default TicketPage;
+

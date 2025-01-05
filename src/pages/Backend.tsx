@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import logo from '../assets/logo.svg';
 import styles from '../styles/styles';
-import Loading from '../components/Loading'; 
+import Loading from '../components/Loading';
 
 const Backend: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [showReactLogo, setShowReactLogo] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,34 +18,26 @@ const Backend: React.FC = () => {
           setError('Failed to connect to the backend.');
         } finally {
           setLoading(false);
-          setShowReactLogo(true);
         }
       };
 
       fetchBackendMessage();
-    }, 5000); 
+    }, 2500);
 
     return () => clearTimeout(timer);
   }, []);
 
+  if (loading) {
+    return <Loading text="Loading data..." />;
+  }
+
   return (
     <div style={styles.app}>
       <header style={styles.appHeader}>
-        {loading ? (
-          <>
-            <Loading />
-            <p style={{ color: '#fff', fontSize: '1.5em', marginTop: '1em' }}>Loading data...</p>
-          </>
-        ) : error ? (
+        {error ? (
           <p style={{ color: 'red' }}>{error}</p>
         ) : (
-          <>
-            {showReactLogo && (
-              <img src={logo} alt="React Logo" style={{ width: '10em', height: '10em', marginBottom: '1em' }} />
-            )}
-            <p style={{ color: 'green', fontSize: '1.5em' }}>{message}</p>
-
-          </>
+          <p style={{ color: 'green', fontSize: '1.5em' }}>{message}</p>
         )}
       </header>
     </div>
