@@ -13,34 +13,40 @@ const NavBar: React.FC = () => {
       <div>
         <Link
           to="/"
-          style={{...styles.navLink,...(hoveredLink === 'Home' ? styles.navLinkHover : {}),}}
+          style={{ ...styles.navLink, ...(hoveredLink === 'Home' ? styles.navLinkHover : {}) }}
           onMouseEnter={() => setHoveredLink('Home')}
-          onMouseLeave={() => setHoveredLink(null)}
-        >
+          onMouseLeave={() => setHoveredLink(null)}>
           Home
         </Link>
         <Link
           to="/backend"
-          style={{...styles.navLink,...(hoveredLink === 'Backend' ? styles.navLinkHover : {}),}}
+          style={{ ...styles.navLink, ...(hoveredLink === 'Backend' ? styles.navLinkHover : {}) }}
           onMouseEnter={() => setHoveredLink('Backend')}
           onMouseLeave={() => setHoveredLink(null)}>
           Backend
         </Link>
         <Link
           to="/tickets"
-          style={{...styles.navLink,...(hoveredLink === 'Tickets' ? styles.navLinkHover : {}),}}
+          style={{ ...styles.navLink, ...(hoveredLink === 'Tickets' ? styles.navLinkHover : {}) }}
           onMouseEnter={() => setHoveredLink('Tickets')}
-          onMouseLeave={() => setHoveredLink(null)}
-        >
+          onMouseLeave={() => setHoveredLink(null)}>
           Tickets
         </Link>
-        
+        {isAuthenticated && (
+          <Link
+            to="/MyTickets"
+            style={{ ...styles.navLink, ...(hoveredLink === 'MyTickets' ? styles.navLinkHover : {}) }}
+            onMouseEnter={() => setHoveredLink('MyTickets')}
+            onMouseLeave={() => setHoveredLink(null)}>
+            My Tickets
+          </Link>
+        )}
       </div>
       <div>
-      {isAuthenticated && (
+        {isAuthenticated && (
           <Link
             to="/profile"
-            style={{...styles.navLink,...(hoveredLink === 'Profile' ? styles.navLinkHover : {}),}}
+            style={{ ...styles.navLink, ...(hoveredLink === 'Profile' ? styles.navLinkHover : {}) }}
             onMouseEnter={() => setHoveredLink('Profile')}
             onMouseLeave={() => setHoveredLink(null)}>
             Profile
@@ -50,14 +56,14 @@ const NavBar: React.FC = () => {
           <>
             <Link
               to="/login"
-              style={{...styles.navLink,...(hoveredLink === 'Login' ? styles.navLinkHover : {}),}}
+              style={{ ...styles.navLink, ...(hoveredLink === 'Login' ? styles.navLinkHover : {}) }}
               onMouseEnter={() => setHoveredLink('Login')}
               onMouseLeave={() => setHoveredLink(null)}>
               Login
             </Link>
             <Link
               to="/register"
-              style={{...styles.navLink,...(hoveredLink === 'Register' ? styles.navLinkHover : {}),}}
+              style={{ ...styles.navLink, ...(hoveredLink === 'Register' ? styles.navLinkHover : {}) }}
               onMouseEnter={() => setHoveredLink('Register')}
               onMouseLeave={() => setHoveredLink(null)}>
               Register
@@ -66,7 +72,7 @@ const NavBar: React.FC = () => {
         )}
         {isAuthenticated && (
           <button
-            style={{...styles.navButton,...(hoveredLink === 'Logout' ? styles.navButtonHover : {}),}}
+            style={{ ...styles.navButton, ...(hoveredLink === 'Logout' ? styles.navButtonHover : {}) }}
             onMouseEnter={() => setHoveredLink('Logout')}
             onMouseLeave={() => setHoveredLink(null)}
             onClick={() => logout()}>

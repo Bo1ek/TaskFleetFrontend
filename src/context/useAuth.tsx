@@ -13,7 +13,9 @@ type UserContextType = {
     loginUser: (email: string, password: string) => void;
     logout: () => void;
     isLoggedIn: () => boolean;
+    getToken: () => string | null;
 };
+
 
 type Props = {children: React.ReactNode };
 
@@ -78,6 +80,7 @@ export const UserProvider = ({children}: Props) => {
     const isLoggedIn = () => {
         return !!user;
     };
+    const getToken = () => token;
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -88,7 +91,7 @@ export const UserProvider = ({children}: Props) => {
     }
 
     return (
-        <UserContext.Provider value={{loginUser, user, token, logout, registerUser, isLoggedIn}}>
+        <UserContext.Provider value={{loginUser, user, token, logout, registerUser, isLoggedIn, getToken}}>
             {isReady ? children : null}
         </UserContext.Provider>
     )

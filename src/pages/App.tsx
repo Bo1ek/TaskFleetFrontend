@@ -13,6 +13,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import ProfilePage from './ProfilePage';
 import TicketDetailsPage from './TicketDetailsPage';
 import CreateTicketPage from './CreateTicketPage';
+import MyTickets from './MyTickets';
 
 const App: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const App: React.FC = () => {
       <Route path="/tickets" element={<ProtectedRoute><TicketPage /></ProtectedRoute>} />
       <Route path="/tickets/:ticketId" element={<ProtectedRoute><TicketDetailsPage /></ProtectedRoute>} />
       <Route path="/create-ticket" element={<ProtectedRoute><CreateTicketPage /></ProtectedRoute>} />
+      <Route path="/myTickets" element={<ProtectedRoute><MyTickets /></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>
   </UserProvider>
