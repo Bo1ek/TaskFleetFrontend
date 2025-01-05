@@ -1,27 +1,79 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/styles';
 import { useAuth } from '../context/useAuth';
 
 const NavBar: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const { isLoggedIn, logout } = useAuth();
-
-  useEffect(() => {
-    setIsAuthenticated(isLoggedIn());
-  }, [isLoggedIn]);
+  const isAuthenticated = isLoggedIn();
 
   return (
     <nav style={styles.nav}>
-      <a href="/" style={styles.navLink}>Home</a>
-      <a href="/backend" style={styles.navLink}>Backend</a>
-      <a href="/tickets" style={styles.navLink}>Tickets</a>
-      {isAuthenticated && <a href="/profile" style={styles.navLink}>Profile</a>}
-      {!isAuthenticated && <a href="/login" style={styles.navLink}>Login</a>}
-      {!isAuthenticated && <a href="/register" style={styles.navLink}>Register</a>}
-      {isAuthenticated && (<a href="#" style={styles.navLink}
-      onClick={(e) => { e.preventDefault(); logout();}}> Logout </a>
-      )}
+      <div>
+        <Link
+          to="/"
+          style={{...styles.navLink,...(hoveredLink === 'Home' ? styles.navLinkHover : {}),}}
+          onMouseEnter={() => setHoveredLink('Home')}
+          onMouseLeave={() => setHoveredLink(null)}
+        >
+          Home
+        </Link>
+        <Link
+          to="/backend"
+          style={{...styles.navLink,...(hoveredLink === 'Backend' ? styles.navLinkHover : {}),}}
+          onMouseEnter={() => setHoveredLink('Backend')}
+          onMouseLeave={() => setHoveredLink(null)}>
+          Backend
+        </Link>
+        <Link
+          to="/tickets"
+          style={{...styles.navLink,...(hoveredLink === 'Tickets' ? styles.navLinkHover : {}),}}
+          onMouseEnter={() => setHoveredLink('Tickets')}
+          onMouseLeave={() => setHoveredLink(null)}
+        >
+          Tickets
+        </Link>
+        
+      </div>
+      <div>
+      {isAuthenticated && (
+          <Link
+            to="/profile"
+            style={{...styles.navLink,...(hoveredLink === 'Profile' ? styles.navLinkHover : {}),}}
+            onMouseEnter={() => setHoveredLink('Profile')}
+            onMouseLeave={() => setHoveredLink(null)}>
+            Profile
+          </Link>
+        )}
+        {!isAuthenticated && (
+          <>
+            <Link
+              to="/login"
+              style={{...styles.navLink,...(hoveredLink === 'Login' ? styles.navLinkHover : {}),}}
+              onMouseEnter={() => setHoveredLink('Login')}
+              onMouseLeave={() => setHoveredLink(null)}>
+              Login
+            </Link>
+            <Link
+              to="/register"
+              style={{...styles.navLink,...(hoveredLink === 'Register' ? styles.navLinkHover : {}),}}
+              onMouseEnter={() => setHoveredLink('Register')}
+              onMouseLeave={() => setHoveredLink(null)}>
+              Register
+            </Link>
+          </>
+        )}
+        {isAuthenticated && (
+          <button
+            style={{...styles.navButton,...(hoveredLink === 'Logout' ? styles.navButtonHover : {}),}}
+            onMouseEnter={() => setHoveredLink('Logout')}
+            onMouseLeave={() => setHoveredLink(null)}
+            onClick={() => logout()}>
+            Logout
+          </button>
+        )}
+      </div>
     </nav>
   );
 };

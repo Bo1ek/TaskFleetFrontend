@@ -51,6 +51,22 @@ const TicketDetailsPage: React.FC = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this ticket?"
+      );
+      if (confirmDelete) {
+        await axios.delete(`https://localhost:44336/api/Tickets/${ticketId}`);
+        alert("Ticket deleted successfully!");
+        navigate("/tickets");
+      }
+    } catch (err) {
+      alert("Failed to delete ticket.");
+      console.error("Error deleting ticket:", err);
+    }
+  };
+
   if (loading) {
     return (
       <div style={styles.app}>
@@ -139,23 +155,27 @@ const TicketDetailsPage: React.FC = () => {
             onChange={(e) =>
               setTicket({ ...ticket, isCompleted: e.target.checked })
             }
-            style={{ color: "#fff", transform: "scale(1.5)" }} 
+            style={{ color: "#fff", transform: "scale(1.5)" }}
           />
         </Box>
         <Box display="flex" justifyContent="space-between" gap="10px">
-          <Button
+        <Button
             variant="contained"
-            style={styles.button}
-            onClick={handleSave}
-          >
-            Save Changes
+            style={{ ...styles.button, backgroundColor: "red", color: "white" }}
+            onClick={handleDelete}>
+            Delete Ticket
           </Button>
           <Button
             variant="contained"
             style={styles.button}
-            onClick={() => navigate(-1)}
-          >
+            onClick={() => navigate(-1)}>
             Go Back
+          </Button>
+          <Button
+            variant="contained"
+            style={{...styles.button, backgroundColor: "green", color: "white" }}
+            onClick={handleSave}>
+            Save Changes
           </Button>
         </Box>
       </Box>

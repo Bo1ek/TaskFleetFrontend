@@ -206,19 +206,20 @@ const CreateTicketPage: React.FC = () => {
           />
         </Box>
         <Box display="flex" justifyContent="space-between" gap="10px">
-          <Button
-            variant="contained"
-            style={styles.button}
-            onClick={handleCreate}
-          >
-            Create Ticket
-          </Button>
+          
           <Button
             variant="contained"
             style={styles.button}
             onClick={() => navigate(-1)}
           >
             Cancel
+          </Button>
+          <Button
+            variant="contained"
+            style={{...styles.button, backgroundColor:"green"}}
+            onClick={handleCreate}
+          >
+            Create Ticket
           </Button>
         </Box>
       </Box>

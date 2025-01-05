@@ -116,7 +116,7 @@ const TicketPage: React.FC = () => {
         >
           Go Back Home
         </Button>
-        <Button style={styles.button} onClick={() => navigate("/create-ticket")}>
+        <Button style={{...styles.button, backgroundColor: "green"}} onClick={() => navigate("/create-ticket")}>
           Create Ticket
         </Button>
       </div>
