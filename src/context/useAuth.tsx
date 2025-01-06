@@ -97,5 +97,13 @@ export const UserProvider = ({children}: Props) => {
     )
 };
 
-export const useAuth = () => React.useContext(UserContext);
+export const useAuth = () => {
+    const context = React.useContext(UserContext);
+    if (!context) {
+      console.error('useAuth must be used within a UserProvider');
+      throw new Error('useAuth must be used within a UserProvider');
+    }
+    return context;
+  };
+  
 
