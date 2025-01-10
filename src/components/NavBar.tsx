@@ -40,13 +40,22 @@ const NavBar: React.FC = () => {
           Map
         </Link>
         {isAuthenticated && (
-          <Link
-            to="/MyTickets"
-            style={{ ...styles.navLink, ...(hoveredLink === 'MyTickets' ? styles.navLinkHover : {}) }}
-            onMouseEnter={() => setHoveredLink('MyTickets')}
-            onMouseLeave={() => setHoveredLink(null)}>
-            My Tickets
-          </Link>
+          <>
+            <Link
+              to="/MyTickets"
+              style={{ ...styles.navLink, ...(hoveredLink === 'MyTickets' ? styles.navLinkHover : {}) }}
+              onMouseEnter={() => setHoveredLink('MyTickets')}
+              onMouseLeave={() => setHoveredLink(null)}>
+              My Tickets
+            </Link>
+            <Link
+              to="/management"
+              style={{ ...styles.navLink, ...(hoveredLink === 'Management' ? styles.navLinkHover : {}) }}
+              onMouseEnter={() => setHoveredLink('Management')}
+              onMouseLeave={() => setHoveredLink(null)}>
+              Management
+            </Link>
+          </>
         )}
       </div>
       <div>

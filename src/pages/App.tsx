@@ -15,6 +15,7 @@ import TicketDetailsPage from './TicketDetailsPage';
 import CreateTicketPage from './CreateTicketPage';
 import MyTickets from './MyTickets';
 import MapPage from './MapPage';
+import Management from './Management';
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
       <Route path="/create-ticket" element={<ProtectedRoute><CreateTicketPage /></ProtectedRoute>} />
       <Route path="/myTickets" element={<ProtectedRoute><MyTickets /></ProtectedRoute>} />
       <Route path="/map" element={<ProtectedRoute><MapPage/></ProtectedRoute>} />
+      <Route path="/Management" element={<ProtectedRoute><Management/></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>
   </UserProvider>
