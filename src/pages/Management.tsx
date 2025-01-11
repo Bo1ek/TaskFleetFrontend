@@ -7,12 +7,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
   Paper,
+  Button,
   Box,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import styles from "../styles/styles";
 import Loading from "../components/Loading";
 
@@ -23,7 +23,6 @@ const Management: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("Locations");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,16 +53,9 @@ const Management: React.FC = () => {
     return <Typography style={styles.errorMessage}>{error}</Typography>;
   }
 
-  const renderTable = (data: any[], headers: string[]) => (
-    <TableContainer
-      component={Paper}
-      style={{
-        ...styles.tableContainer,
-        maxHeight: "400px", // Fixed height for the table container
-        overflowY: "auto", // Enable vertical scrolling
-      }}
-    >
-      <Table stickyHeader>
+  const renderTable = (data: any[], headers: string[], rowLink: (item: any) => string) => (
+    <TableContainer component={Paper} style={styles.tableContainer}>
+      <Table>
         <TableHead>
           <TableRow>
             {headers.map((header) => (
@@ -76,28 +68,26 @@ const Management: React.FC = () => {
         <TableBody>
           {data.length > 0 ? (
             data.map((item: any) => (
-              <TableRow key={item.vehicleId || item.id || item.locationId}>
+              <TableRow
+                key={item.id || item.vehicleId || item.locationId}
+                hover
+                style={{ cursor: "pointer" }}
+                onClick={() => (window.location.href = rowLink(item))}
+              >
                 {headers.map((header) => (
                   <TableCell key={header} style={styles.tableCell}>
+                    {header === "LocationId" && item.locationId}
+                    {header === "City" && item.city}
+                    {header === "Address" && item.address}
                     {header === "VehicleId" && item.vehicleId}
                     {header === "Name" && item.name}
-                    {header === "Type" &&
-                      ["Bus", "Truck", "Van", "Taxi"][item.type]}
+                    {header === "Type" && ["Bus", "Truck", "Van", "Taxi"][item.type]}
                     {header === "Capacity" && item.capacity}
                     {header === "Seats" && item.seats}
-                    {header === "IsAvailable" &&
-                      (item.isAvailable ? "Yes" : "No")}
+                    {header === "IsAvailable" && (item.isAvailable ? "Yes" : "No")}
+                    {header === "UserId" && item.email}
                     {header === "First Name" && item.firstName}
                     {header === "Last Name" && item.lastName}
-                    {header !== "VehicleId" &&
-                      header !== "Name" &&
-                      header !== "Type" &&
-                      header !== "Capacity" &&
-                      header !== "Seats" &&
-                      header !== "IsAvailable" &&
-                      header !== "First Name" &&
-                      header !== "Last Name" &&
-                      (item[header.toLowerCase()] ?? "N/A")}
                   </TableCell>
                 ))}
               </TableRow>
@@ -115,34 +105,12 @@ const Management: React.FC = () => {
   );
 
   return (
-    <Box
-      style={{
-        ...styles.app,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center", // Align content horizontally
-        minHeight: "100vh", // Allow page to grow beyond viewport height
-        overflow: "auto", // Enable scrolling when necessary
-      }}
-    >
-      {/* Centralized Header */}
-      <Box
-        style={{
-          textAlign: "center",
-          padding: "20px", // Padding applied to the header section
-          boxSizing: "border-box",
-        }}
-      >
-        <Typography
-          variant="h4"
-          style={{
-            fontWeight: "bold",
-            marginBottom: "16px", // Spacing between title and tabs
-          }}
-        >
+    <Box style={styles.app}>
+      <Box style={{ textAlign: "center", marginBottom: "20px" }}>
+        <Typography variant="h4" style={{ fontWeight: "bold" }}>
           Management Dashboard
         </Typography>
-        <Box display="flex" justifyContent="center" gap="16px" mb={3}>
+        <Box display="flex" justifyContent="center" gap="16px">
           <Button
             variant="contained"
             onClick={() => setActiveTab("Locations")}
@@ -176,25 +144,19 @@ const Management: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Render Content */}
-      <Box
-        style={{
-          width: "100%",
-          maxWidth: "800px",
-          paddingBottom: "20px", // Avoid spacing that causes scrollbars
-        }}
-      >
+      <Box style={{ width: "100%", maxWidth: "1200px", margin: "0 auto" }}>
         {activeTab === "Locations" && (
           <>
-            <Typography variant="h5" align="center" gutterBottom>
-              Manage Locations
-            </Typography>
-            {renderTable(locations, ["LocationId", "City", "Latitude", "Longitude"])}
+            {renderTable(
+              locations,
+              ["LocationId", "City", "Address"],
+              (item) => `/locations/${item.locationId}`
+            )}
             <Box display="flex" justifyContent="center" marginTop="16px">
               <Button
                 variant="contained"
                 style={styles.button}
-                onClick={() => navigate("/create-location")}
+                onClick={() => (window.location.href = "/create-location")}
               >
                 Add Location
               </Button>
@@ -203,18 +165,16 @@ const Management: React.FC = () => {
         )}
         {activeTab === "Vehicles" && (
           <>
-            <Typography variant="h5" align="center" gutterBottom>
-              Manage Vehicles
-            </Typography>
             {renderTable(
               vehicles,
-              ["VehicleId", "Name", "Type", "Capacity", "Seats", "IsAvailable"]
+              ["VehicleId", "Name", "Type", "Capacity", "Seats", "IsAvailable"],
+              (item) => `/vehicles/${item.vehicleId}`
             )}
             <Box display="flex" justifyContent="center" marginTop="16px">
               <Button
                 variant="contained"
                 style={styles.button}
-                onClick={() => navigate("/create-vehicle")}
+                onClick={() => (window.location.href = "/create-vehicle")}
               >
                 Add Vehicle
               </Button>
@@ -223,15 +183,16 @@ const Management: React.FC = () => {
         )}
         {activeTab === "Users" && (
           <>
-            <Typography variant="h5" align="center" gutterBottom>
-              Manage Users
-            </Typography>
-            {renderTable(users, ["Email", "First Name", "Last Name"])}
+            {renderTable(
+              users,
+              ["UserId", "First Name", "Last Name"],
+              (item) => `/users/${item.id}`
+            )}
             <Box display="flex" justifyContent="center" marginTop="16px">
               <Button
                 variant="contained"
                 style={styles.button}
-                onClick={() => navigate("/create-user")}
+                onClick={() => (window.location.href = "/create-user")}
               >
                 Add User
               </Button>
