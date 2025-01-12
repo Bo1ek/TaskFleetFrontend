@@ -16,6 +16,17 @@ import styles from '../styles/styles';
 import Loading from '../components/Loading';
 import { useAuth } from '../context/useAuth';
 
+const getStatusLabel = (status: number): string => {
+  const statuses = [
+    "Waiting For Approval",
+    "Approved",
+    "Rejected",
+    "In Progress",
+    "Completed",
+  ];
+  return statuses[status] || "Unknown Status";
+};
+
 const MyTickets: React.FC = () => {
   const [tickets, setTickets] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,74 +65,72 @@ const MyTickets: React.FC = () => {
 
   return (
     <div style={styles.app}>
-        <Typography
-            variant="h4"
-            align="center"
-            gutterBottom
-            style={{ fontWeight: "bold", marginBottom: "20px", color: "#FFF" }}
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        style={{ fontWeight: "bold", marginBottom: "20px", color: "#FFF" }}
+      >
+        My Tickets
+      </Typography>
+      <TableContainer component={Paper} style={styles.tableContainer}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {[
+                "Title",
+                "Description",
+                "Start Location",
+                "End Location",
+                "Created Date",
+                "Due Date",
+                "Status",
+              ].map((header) => (
+                <TableCell key={header} style={styles.tableHeader}>
+                  {header}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tickets.map((ticket) => (
+              <TableRow key={ticket.ticketId}>
+                <TableCell style={styles.tableCell}>
+                  <Link to={`/tickets/${ticket.ticketId}`} style={styles.link}>
+                    {ticket.title}
+                  </Link>
+                </TableCell>
+                <TableCell style={styles.tableCell}>
+                  {ticket.description || "No description available"}
+                </TableCell>
+                <TableCell style={styles.tableCell}>
+                  {ticket.startLocation?.city || "N/A"}
+                </TableCell>
+                <TableCell style={styles.tableCell}>
+                  {ticket.endLocation?.city || "N/A"}
+                </TableCell>
+                <TableCell style={styles.tableCell}>
+                  {new Date(ticket.createdDate).toLocaleString()}
+                </TableCell>
+                <TableCell style={styles.tableCell}>
+                  {new Date(ticket.dueDate).toLocaleString()}
+                </TableCell>
+                <TableCell style={styles.tableCell}>{getStatusLabel(ticket.status)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px" }}>
+        <Button
+          style={styles.button}
+          onClick={() => (window.location.href = "/")}
         >
-            My Tickets
-        </Typography>
-        <TableContainer component={Paper} style={styles.tableContainer}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        {[
-                            "Title",
-                            "Description",
-                            "Start Location",
-                            "End Location",
-                            "Created Date",
-                            "Due Date",
-                            "Completed",
-                        ].map((header) => (
-                            <TableCell key={header} style={styles.tableHeader}>
-                                {header}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {tickets.map((ticket) => (
-                        <TableRow key={ticket.ticketId}>
-                            <TableCell style={styles.tableCell}>
-                                <Link to={`/tickets/${ticket.ticketId}`} style={styles.link}>
-                                    {ticket.title}
-                                </Link>
-                            </TableCell>
-                            <TableCell style={styles.tableCell}>
-                                {ticket.description || "No description available"}
-                            </TableCell>
-                            <TableCell style={styles.tableCell}>
-                                {ticket.startLocation?.city || "N/A"}
-                            </TableCell>
-                            <TableCell style={styles.tableCell}>
-                                {ticket.endLocation?.city || "N/A"}
-                            </TableCell>
-                            <TableCell style={styles.tableCell}>
-                                {new Date(ticket.createdDate).toLocaleString()}
-                            </TableCell>
-                            <TableCell style={styles.tableCell}>
-                                {new Date(ticket.dueDate).toLocaleString()}
-                            </TableCell>
-                            <TableCell style={styles.tableCell}>
-                                {ticket.isCompleted ? "Yes" : "No"}
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-        <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginTop: "20px" }}>
-            <Button
-                style={styles.button}
-                onClick={() => (window.location.href = "/")}
-            >
-                Go Back Home
-            </Button>
-        </div>
+          Go Back Home
+        </Button>
+      </div>
     </div>
-);
+  );
 };
 
 export default MyTickets;

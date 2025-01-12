@@ -19,6 +19,14 @@ const TicketDetailsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const statuses = [
+    { value: 0, label: "Waiting For Approval" },
+    { value: 1, label: "Approved" },
+    { value: 2, label: "Rejected" },
+    { value: 3, label: "In Progress" },
+    { value: 4, label: "Completed" },
+  ];
+
   useEffect(() => {
     const fetchTicket = async () => {
       try {
@@ -148,6 +156,27 @@ const TicketDetailsPage: React.FC = () => {
             ))}
           </TextField>
         </Box>
+        <Box mb={3}>
+          <Typography style={styles.title}>Status:</Typography>
+          <TextField
+            fullWidth
+            select
+            value={ticket.status || 0}
+            onChange={(e) =>
+              setTicket({ ...ticket, status: parseInt(e.target.value) })
+            }
+            variant="outlined"
+            InputProps={{
+              style: styles.inputField,
+            }}
+          >
+            {statuses.map((status) => (
+              <MenuItem key={status.value} value={status.value}>
+                {status.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
         <Box mb={3} display="flex" alignItems="center" justifyContent="center" gap="10px">
           <Typography style={styles.title}>Completed:</Typography>
           <Checkbox
@@ -159,22 +188,25 @@ const TicketDetailsPage: React.FC = () => {
           />
         </Box>
         <Box display="flex" justifyContent="space-between" gap="10px">
-        <Button
+          <Button
             variant="contained"
             style={{ ...styles.button, backgroundColor: "red", color: "white" }}
-            onClick={handleDelete}>
+            onClick={handleDelete}
+          >
             Delete Ticket
           </Button>
           <Button
             variant="contained"
             style={styles.button}
-            onClick={() => navigate(-1)}>
+            onClick={() => navigate(-1)}
+          >
             Go Back
           </Button>
           <Button
             variant="contained"
-            style={{...styles.button, backgroundColor: "green", color: "white" }}
-            onClick={handleSave}>
+            style={{ ...styles.button, backgroundColor: "green", color: "white" }}
+            onClick={handleSave}
+          >
             Save Changes
           </Button>
         </Box>
