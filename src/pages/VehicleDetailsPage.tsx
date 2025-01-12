@@ -60,7 +60,11 @@ const VehicleDetailsPage: React.FC = () => {
   };
 
   const handleAssignTicket = (ticketId: string) => {
-    setVehicle({ ...vehicle, assignedTicketId: ticketId, isAvailable: false });
+    setVehicle({
+      ...vehicle,
+      assignedTicketId: ticketId || null, 
+      isAvailable: !ticketId, 
+    });
   };
 
   if (loading) {
