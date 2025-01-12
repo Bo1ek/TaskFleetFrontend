@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-routing-machine";
 import { useMap } from "react-leaflet";
@@ -7,15 +7,23 @@ type RoutingMachineProps = {
   start: [number, number];
   end: [number, number];
 };
-type Waypoint = {
-  latLng: L.LatLng; 
-};
 
 const RoutingMachine: React.FC<RoutingMachineProps> = ({ start, end }) => {
   const map = useMap(); 
 
+  const routingControlRef = useRef<ReturnType<typeof L.Routing.control> | null>(null);
+
   useEffect(() => {
-    if (!map) return;
+    if (!map || !start || !end) return;
+
+    if (routingControlRef.current) {
+      try {
+        routingControlRef.current.getPlan()?.setWaypoints([]); 
+        map.removeControl(routingControlRef.current);
+      } catch (error) {
+        console.error("Error while removing routing control:", error);
+      }
+    }
 
     const routingControl = L.Routing.control({
       waypoints: [
@@ -26,23 +34,29 @@ const RoutingMachine: React.FC<RoutingMachineProps> = ({ start, end }) => {
       lineOptions: {
         styles: [{ color: "blue", weight: 4 }], 
       },
-      createMarker: (i: number, waypoint: Waypoint, n: number) => {
-        return L.marker(waypoint.latLng, {
-          draggable: false,
-        });
-      },
+      createMarker: () => null, 
     });
+
 
     routingControl.addTo(map);
 
+    routingControlRef.current = routingControl;
+
+
     return () => {
-      if (map.hasLayer(routingControl)) {
-        map.removeControl(routingControl);
+      if (routingControlRef.current) {
+        try {
+          routingControlRef.current.getPlan()?.setWaypoints([]); 
+          map.removeControl(routingControlRef.current); 
+          routingControlRef.current = null; 
+        } catch (error) {
+          console.error("Error while cleaning up routing control:", error);
+        }
       }
     };
   }, [map, start, end]);
 
-  return null; 
+  return null;
 };
 
 export default RoutingMachine;

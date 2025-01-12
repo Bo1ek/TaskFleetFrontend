@@ -84,7 +84,12 @@ const Management: React.FC = () => {
                     {header === "Type" && ["Bus", "Truck", "Van", "Taxi"][item.type]}
                     {header === "Capacity" && item.capacity}
                     {header === "Seats" && item.seats}
-                    {header === "IsAvailable" && (item.isAvailable ? "Yes" : "No")}
+                    {header === "IsAvailable" &&
+                      (item.isAvailable ? (
+                        <span style={{ color: "green", fontWeight: "bold" }}>Yes</span>
+                      ) : (
+                        <span style={{ color: "red", fontWeight: "bold" }}>No</span>
+                      ))}
                     {header === "UserId" && item.email}
                     {header === "First Name" && item.firstName}
                     {header === "Last Name" && item.lastName}
@@ -103,6 +108,7 @@ const Management: React.FC = () => {
       </Table>
     </TableContainer>
   );
+  
 
   return (
     <Box style={styles.app}>
