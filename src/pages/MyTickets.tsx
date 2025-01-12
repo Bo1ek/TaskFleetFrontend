@@ -80,6 +80,7 @@ const MyTickets: React.FC = () => {
               {[
                 "Title",
                 "Description",
+                "Assigned Vehicle",
                 "Start Location",
                 "End Location",
                 "Created Date",
@@ -102,6 +103,9 @@ const MyTickets: React.FC = () => {
                 </TableCell>
                 <TableCell style={styles.tableCell}>
                   {ticket.description || "No description available"}
+                </TableCell>
+                <TableCell style={styles.tableCell}>
+                  {ticket.assignedVehicle?.name ||  "No Vehicle Assigned"}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
                   {ticket.startLocation?.city || "N/A"}

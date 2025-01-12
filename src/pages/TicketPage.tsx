@@ -77,6 +77,7 @@ const TicketPage: React.FC = () => {
                 "Title",
                 "Description",
                 "Assigned User",
+                "Vehicle Name", 
                 "Start Location",
                 "End Location",
                 "Created Date",
@@ -104,6 +105,9 @@ const TicketPage: React.FC = () => {
                     : "Unassigned"}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
+                  {ticket.assignedVehicle ? ticket.assignedVehicle.name : "No Vehicle Assigned"}
+                </TableCell>
+                <TableCell style={styles.tableCell}>
                   {ticket.startLocation?.city || "N/A"}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
@@ -116,6 +120,7 @@ const TicketPage: React.FC = () => {
                   {new Date(ticket.dueDate).toLocaleString()}
                 </TableCell>
                 <TableCell style={styles.tableCell}>{getStatusLabel(ticket.status)}</TableCell>
+
               </TableRow>
             ))}
           </TableBody>

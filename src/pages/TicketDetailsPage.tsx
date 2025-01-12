@@ -15,6 +15,7 @@ const TicketDetailsPage: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
   const [ticket, setTicket] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
+  const [vehicles, setVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -28,17 +29,22 @@ const TicketDetailsPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    const fetchTicket = async () => {
+    const fetchDetails = async () => {
       try {
-        const response = await axios.get(
+        const ticketResponse = await axios.get(
           `https://localhost:44336/api/Tickets/${ticketId}`
         );
-        setTicket(response.data);
+        setTicket(ticketResponse.data);
 
         const usersResponse = await axios.get(
           "https://localhost:44336/api/Accounts"
         );
         setUsers(usersResponse.data);
+
+        const vehiclesResponse = await axios.get(
+          "https://localhost:44336/api/Vehicles"
+        );
+        setVehicles(vehiclesResponse.data.filter((v: any) => v.isAvailable));
       } catch (err) {
         console.error("Error fetching ticket details:", err);
         setError("Failed to load ticket details.");
@@ -47,8 +53,21 @@ const TicketDetailsPage: React.FC = () => {
       }
     };
 
-    fetchTicket();
+    fetchDetails();
   }, [ticketId]);
+
+  const handleAssignVehicle = async (vehicleId: number) => {
+    try {
+      await axios.post(
+        `https://localhost:44336/api/Tickets/${ticketId}/assignVehicle/${vehicleId}`
+      );
+      alert("Vehicle assigned successfully!");
+      const updatedTicket = { ...ticket, assignedVehicleId: vehicleId };
+      setTicket(updatedTicket);
+    } catch (err) {
+      alert("Failed to assign vehicle.");
+    }
+  };
 
   const handleSave = async () => {
     try {
@@ -152,6 +171,27 @@ const TicketDetailsPage: React.FC = () => {
             {users.map((user) => (
               <MenuItem key={user.id} value={user.id}>
                 {user.firstName} {user.lastName}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+        <Box mb={3}>
+          <Typography style={styles.title}>Assigned Vehicle:</Typography>
+          <TextField
+            fullWidth
+            select
+            value={ticket.assignedVehicleId || ""}
+            onChange={(e) =>
+              handleAssignVehicle(parseInt(e.target.value))
+            }
+            variant="outlined"
+            InputProps={{
+              style: styles.inputField,
+            }}
+          >
+            {vehicles.map((vehicle) => (
+              <MenuItem key={vehicle.vehicleId} value={vehicle.vehicleId}>
+                {vehicle.name}
               </MenuItem>
             ))}
           </TextField>
