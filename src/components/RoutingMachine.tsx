@@ -1,30 +1,21 @@
-import React, { useEffect, useRef } from "react";
-import { useMap } from "react-leaflet";
+import { useEffect } from "react";
 import L from "leaflet";
 import "leaflet-routing-machine";
+import { useMap } from "react-leaflet";
 
-interface RoutingMachineProps {
-  start: [number, number] | null; 
-  end: [number, number] | null;  
-}
+type RoutingMachineProps = {
+  start: [number, number];
+  end: [number, number];
+};
+type Waypoint = {
+  latLng: L.LatLng; 
+};
 
 const RoutingMachine: React.FC<RoutingMachineProps> = ({ start, end }) => {
-  const map = useMap();
-  const routingControlRef = useRef<any>(null); 
+  const map = useMap(); 
 
   useEffect(() => {
-    if (routingControlRef.current) {
-      try {
-        map.removeControl(routingControlRef.current);
-      } catch (error) {
-        console.warn("Error while removing routing control (likely safe to ignore):", error);
-      }
-      routingControlRef.current = null; 
-    }
-
-    if (!start || !end) {
-      return;
-    }
+    if (!map) return;
 
     const routingControl = L.Routing.control({
       waypoints: [
@@ -33,32 +24,25 @@ const RoutingMachine: React.FC<RoutingMachineProps> = ({ start, end }) => {
       ],
       routeWhileDragging: true,
       lineOptions: {
-        styles: [{ color: "blue", weight: 6 }],
+        styles: [{ color: "blue", weight: 4 }], 
       },
-      createMarker: (i: number, waypoint: { latLng: L.LatLng }) =>
-        L.marker(waypoint.latLng, { draggable: true }),
+      createMarker: (i: number, waypoint: Waypoint, n: number) => {
+        return L.marker(waypoint.latLng, {
+          draggable: false,
+        });
+      },
     });
 
     routingControl.addTo(map);
-    routingControlRef.current = routingControl; 
-
-    routingControl.on("routingerror", (error: any) => {
-      console.error("Routing error:", error);
-    });
 
     return () => {
-      if (routingControlRef.current) {
-        try {
-          map.removeControl(routingControlRef.current);
-        } catch (error) {
-          console.warn("Error while cleaning up routing control during unmount:", error);
-        }
-        routingControlRef.current = null; 
+      if (map.hasLayer(routingControl)) {
+        map.removeControl(routingControl);
       }
     };
-  }, [map, start, end]); 
+  }, [map, start, end]);
 
-  return null;
+  return null; 
 };
 
 export default RoutingMachine;
