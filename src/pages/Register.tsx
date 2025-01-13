@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../context/useAuth";
@@ -9,10 +9,12 @@ import {
   TextField,
   Button,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
-import styles from "../styles/styles"; 
+import axios from "axios";
+import styles from "../styles/styles";
 
 type RegisterFormsInputs = {
   email: string;
@@ -42,6 +44,10 @@ const GlassCard = styled(Box)({
 
 const RegisterPage = () => {
   const { registerUser } = useAuth();
+  const [roles, setRoles] = useState<string[]>([]);
+  const [loadingRoles, setLoadingRoles] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -49,6 +55,21 @@ const RegisterPage = () => {
   } = useForm<RegisterFormsInputs>({
     resolver: yupResolver(validationSchema),
   });
+
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get("https://localhost:44336/api/Accounts/roles");
+      setRoles(response.data || []);
+    } catch (err) {
+      setError("Failed to fetch roles. Please try again later.");
+    } finally {
+      setLoadingRoles(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
 
   const handleRegister = async (form: RegisterFormsInputs) => {
     try {
@@ -182,36 +203,44 @@ const RegisterPage = () => {
             />
           </Box>
           <Box mb={3}>
-            <TextField
-              fullWidth
-              select
-              variant="outlined"
-              label="Role"
-              placeholder="Select your role"
-              InputProps={{
-                style: { color: "#fff" },
-              }}
-              InputLabelProps={{
-                style: { color: "#fff" },
-              }}
-              error={!!errors.role}
-              helperText={errors.role?.message}
-              {...register("role")}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.5)",
+            {loadingRoles ? (
+              <CircularProgress />
+            ) : error ? (
+              <Typography style={{ color: "red" }}>{error}</Typography>
+            ) : (
+              <TextField
+                fullWidth
+                select
+                variant="outlined"
+                label="Role"
+                placeholder="Select your role"
+                InputProps={{
+                  style: { color: "#fff" },
+                }}
+                InputLabelProps={{
+                  style: { color: "#fff" },
+                }}
+                error={!!errors.role}
+                helperText={errors.role?.message}
+                {...register("role")}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.5)",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#fff",
+                    },
                   },
-                  "&:hover fieldset": {
-                    borderColor: "#fff",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="Admin">Admin</MenuItem>
-              <MenuItem value="User">User</MenuItem>
-              <MenuItem value="Manager">Manager</MenuItem>
-            </TextField>
+                }}
+              >
+                {roles.map((role) => (
+                  <MenuItem key={role} value={role}>
+                    {role}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
           </Box>
           <Button
             type="submit"

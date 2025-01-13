@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import RoutingMachine from "../components/RoutingMachine";
+import Loading from "../components/Loading";
 
 type Location = {
   locationId: number;
@@ -14,6 +15,7 @@ const MapPage: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [startLocation, setStartLocation] = useState<[number, number] | null>(null);
   const [endLocation, setEndLocation] = useState<[number, number] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -26,10 +28,12 @@ const MapPage: React.FC = () => {
         setLocations(data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchLocations();
+    setTimeout(fetchLocations, 2500); 
   }, []);
 
   const handleStartLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -47,6 +51,10 @@ const MapPage: React.FC = () => {
       setEndLocation([selectedLocation.latitude, selectedLocation.longitude]);
     }
   };
+
+  if (loading) {
+    return <Loading text="Loading Map Page..." />;
+  }
 
   return (
     <div>
@@ -91,18 +99,9 @@ const MapPage: React.FC = () => {
           </label>
         </div>
       </div>
-      <MapContainer
-        center={[52.237, 21.017]}
-        zoom={10}
-        style={{ height: "100vh", width: "100vw" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; OpenStreetMap contributors"
-        />
-        {startLocation && endLocation && (
-          <RoutingMachine start={startLocation} end={endLocation} />
-        )}
+      <MapContainer center={[52.237, 21.017]} zoom={10} style={{ height: "100vh", width: "100vw" }}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
+        {startLocation && endLocation && <RoutingMachine start={startLocation} end={endLocation} />}
       </MapContainer>
     </div>
   );

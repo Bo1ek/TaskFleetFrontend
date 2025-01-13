@@ -113,7 +113,7 @@ const AddLocation: React.FC = () => {
       <MapContainer
         center={[form.latitude, form.longitude]}
         zoom={13}
-        style={{ height: "1200px", width: "100%", marginBottom: "20px" }}
+        style={{ height: "700px", width: "100%", marginBottom: "20px" }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

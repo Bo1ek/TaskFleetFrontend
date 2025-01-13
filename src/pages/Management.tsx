@@ -11,10 +11,9 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import styles from "../styles/styles";
 import Loading from "../components/Loading";
+import styles from "../styles/styles";
 
 const Management: React.FC = () => {
   const [locations, setLocations] = useState<any[]>([]);
@@ -42,11 +41,12 @@ const Management: React.FC = () => {
       }
     };
 
-    fetchData();
+    const timer = setTimeout(fetchData, 2500); // Simulated loading delay
+    return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    return <Loading text="Loading data..." />;
+    return <Loading text="Loading Management Dashboard..." />;
   }
 
   if (error) {
@@ -108,7 +108,6 @@ const Management: React.FC = () => {
       </Table>
     </TableContainer>
   );
-  
 
   return (
     <Box style={styles.app}>
@@ -194,15 +193,6 @@ const Management: React.FC = () => {
               ["UserId", "First Name", "Last Name"],
               (item) => `/users/${item.id}`
             )}
-            <Box display="flex" justifyContent="center" marginTop="16px">
-              <Button
-                variant="contained"
-                style={styles.button}
-                onClick={() => (window.location.href = "/create-user")}
-              >
-                Add User
-              </Button>
-            </Box>
           </>
         )}
       </Box>
