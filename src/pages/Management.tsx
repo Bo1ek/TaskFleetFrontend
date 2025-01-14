@@ -190,7 +190,7 @@ const Management: React.FC = () => {
           <>
             {renderTable(
               users,
-              ["UserId", "First Name", "Last Name"],
+              ["UserId", "First Name", "Last Name", "IsAvailable"],
               (item) => `/users/${item.id}`
             )}
           </>

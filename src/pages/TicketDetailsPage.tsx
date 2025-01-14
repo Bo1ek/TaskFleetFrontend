@@ -71,10 +71,17 @@ const TicketDetailsPage: React.FC = () => {
 
   const handleSave = async () => {
     try {
+      if (ticket.assignedUserId) {
+        await axios.post(
+          `https://localhost:44336/api/Tickets/${ticketId}/assign/${ticket.assignedUserId}`
+        );
+      }
+  
       await axios.put(`https://localhost:44336/api/Tickets/${ticketId}`, ticket);
       alert("Ticket updated successfully!");
     } catch (err) {
       alert("Failed to update ticket.");
+      console.error("Error saving ticket:", err);
     }
   };
 
