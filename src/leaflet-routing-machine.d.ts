@@ -1,30 +1,37 @@
 declare module "leaflet-routing-machine" {
-    import * as L from "leaflet";
-  
-    namespace Routing {
-      interface Waypoint {
-        latLng: L.LatLng;
-        name?: string;
-      }
-  
-      interface ControlOptions {
-        waypoints: Waypoint[] | L.LatLng[];
-        routeWhileDragging?: boolean;
-        lineOptions?: {
-          styles: { color: string; weight: number }[];
-        };
-        createMarker?: (i: number, waypoint: Waypoint) => L.Marker;
-      }
-  
-      function control(options: any): any;
+  import * as L from "leaflet";
+
+  namespace Routing {
+    interface Waypoint {
+      latLng: L.LatLng;
+      name?: string;
     }
-  
-    export default Routing;
-  }
-  
-  declare namespace L {
-    namespace Routing {
-      function control(options: Routing.ControlOptions): L.Routing.Control;
+
+    interface ControlOptions {
+      waypoints: Array<L.LatLng | Waypoint>;
+      routeWhileDragging?: boolean;
+      lineOptions?: {
+        styles: Array<{ color: string; weight: number }>;
+      };
+      createMarker?: (i: number, waypoint: Waypoint, n: number) => L.Marker | undefined;
     }
+
+    class Control extends L.Control {
+      getPlan(): Plan | undefined;
+    }
+
+    interface Plan {
+      setWaypoints(waypoints: Array<L.LatLng | Waypoint>): void;
+    }
+
+    function control(options: ControlOptions): Control;
   }
-  
+
+  export default Routing;
+}
+
+declare namespace L {
+  namespace Routing {
+    function control(options: Routing.ControlOptions): Routing.Control;
+  }
+}

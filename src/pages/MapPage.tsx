@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import RoutingMachine from "../components/RoutingMachine";
 import Loading from "../components/Loading";
+import tokml from "tokml";
 
 type Location = {
   locationId: number;
@@ -16,6 +17,8 @@ const MapPage: React.FC = () => {
   const [startLocation, setStartLocation] = useState<[number, number] | null>(null);
   const [endLocation, setEndLocation] = useState<[number, number] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [kmlData, setKmlData] = useState<string | null>(null);
+  const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -33,8 +36,27 @@ const MapPage: React.FC = () => {
       }
     };
 
-    setTimeout(fetchLocations, 2500); 
+    setTimeout(fetchLocations, 2500);
   }, []);
+
+  useEffect(() => {
+    if (routeCoordinates.length > 0) {
+      const kml = tokml({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: routeCoordinates.map(([lat, lng]) => [lng, lat]),
+            },
+            properties: { name: "Route" },
+          },
+        ],
+      });
+      setKmlData(kml);
+    }
+  }, [routeCoordinates]);
 
   const handleStartLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = parseInt(e.target.value, 10);
@@ -98,10 +120,33 @@ const MapPage: React.FC = () => {
             </select>
           </label>
         </div>
+        {kmlData && (
+          <a
+            href={`data:text/xml;charset=utf-8,${encodeURIComponent(kmlData)}`}
+            download="route.kml"
+            style={{
+              display: "inline-block",
+              marginTop: "10px",
+              padding: "10px",
+              backgroundColor: "#007BFF",
+              color: "#FFF",
+              borderRadius: "5px",
+              textDecoration: "none",
+            }}
+          >
+            Download KML
+          </a>
+        )}
       </div>
       <MapContainer center={[52.237, 21.017]} zoom={10} style={{ height: "100vh", width: "100vw" }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
-        {startLocation && endLocation && <RoutingMachine start={startLocation} end={endLocation} />}
+        {startLocation && endLocation && (
+          <RoutingMachine
+            start={startLocation}
+            end={endLocation}
+            onRouteGenerated={(coords) => setRouteCoordinates(coords)}
+          />
+        )}
       </MapContainer>
     </div>
   );
