@@ -175,15 +175,6 @@ const Management: React.FC = () => {
               ["VehicleId", "Name", "Type", "Capacity", "Seats", "IsAvailable"],
               (item) => `/vehicles/${item.vehicleId}`
             )}
-            <Box display="flex" justifyContent="center" marginTop="16px">
-              <Button
-                variant="contained"
-                style={styles.button}
-                onClick={() => (window.location.href = "/create-vehicle")}
-              >
-                Add Vehicle
-              </Button>
-            </Box>
           </>
         )}
         {activeTab === "Users" && (
