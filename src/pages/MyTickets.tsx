@@ -105,13 +105,13 @@ const MyTickets: React.FC = () => {
                   {ticket.description || "No description available"}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.assignedVehicle?.name ||  "No Vehicle Assigned"}
+                  {ticket.assignedVehicleName}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.startLocation?.city || "N/A"}
+                  {ticket.startLocationCity}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.endLocation?.city || "N/A"}
+                  {ticket.endLocationCity}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
                   {new Date(ticket.createdDate).toLocaleString()}

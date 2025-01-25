@@ -124,7 +124,6 @@ const LoginPage = () => {
                 fontWeight: "bold",
               }}
             >
-              Forgot Password?
             </Link>
           </Box>
           <Button

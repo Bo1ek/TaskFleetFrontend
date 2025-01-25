@@ -37,6 +37,7 @@ const TicketPage: React.FC = () => {
       const fetchTickets = async () => {
         try {
           const response = await axios.get('https://localhost:44336/api/Tickets');
+          console.log("Fetched tickets:", response.data); 
           setTickets(response.data);
         } catch (err: any) {
           setError('Failed to fetch tickets.');
@@ -100,18 +101,16 @@ const TicketPage: React.FC = () => {
                 </TableCell>
                 <TableCell style={styles.tableCell}>{ticket.description}</TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.assignedUser
-                    ? `${ticket.assignedUser.firstName} ${ticket.assignedUser.lastName}`
-                    : "Unassigned"}
+                  {ticket.assignedUserName}                    
                 </TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.assignedVehicle ? ticket.assignedVehicle.name : "No Vehicle Assigned"}
+             {ticket.assignedVehicleName}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.startLocation?.city || "N/A"}
+                  {ticket.startLocationCity}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
-                  {ticket.endLocation?.city || "N/A"}
+                  {ticket.endLocationCity}
                 </TableCell>
                 <TableCell style={styles.tableCell}>
                   {new Date(ticket.createdDate).toLocaleString()}

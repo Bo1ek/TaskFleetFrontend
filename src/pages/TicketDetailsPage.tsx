@@ -36,15 +36,15 @@ const TicketDetailsPage: React.FC = () => {
         );
         setTicket(ticketResponse.data);
 
-        const usersResponse = await axios.get(
-          "https://localhost:44336/api/Accounts"
-        );
+        const usersResponse = await axios.get("https://localhost:44336/api/Accounts");
         setUsers(usersResponse.data);
 
-        const vehiclesResponse = await axios.get(
-          "https://localhost:44336/api/Vehicles"
+        const vehiclesResponse = await axios.get("https://localhost:44336/api/Vehicles");
+        setVehicles(
+          vehiclesResponse.data.filter(
+            (v: any) => v.isAvailable || v.vehicleId === ticketResponse.data.assignedVehicleId
+          )
         );
-        setVehicles(vehiclesResponse.data.filter((v: any) => v.isAvailable));
       } catch (err) {
         console.error("Error fetching ticket details:", err);
         setError("Failed to load ticket details.");
@@ -57,14 +57,19 @@ const TicketDetailsPage: React.FC = () => {
   }, [ticketId]);
 
   const handleAssignVehicle = async (vehicleId: number) => {
+    if (ticket.assignedVehicleId === vehicleId) {
+      alert("This vehicle is already assigned to the ticket.");
+      return;
+    }
+
     try {
       await axios.post(
         `https://localhost:44336/api/Tickets/${ticketId}/assignVehicle/${vehicleId}`
       );
       alert("Vehicle assigned successfully!");
-      const updatedTicket = { ...ticket, assignedVehicleId: vehicleId };
-      setTicket(updatedTicket);
+      setTicket({ ...ticket, assignedVehicleId: vehicleId });
     } catch (err) {
+      console.error("Failed to assign vehicle:", err);
       alert("Failed to assign vehicle.");
     }
   };
@@ -76,7 +81,7 @@ const TicketDetailsPage: React.FC = () => {
           `https://localhost:44336/api/Tickets/${ticketId}/assign/${ticket.assignedUserId}`
         );
       }
-  
+
       await axios.put(`https://localhost:44336/api/Tickets/${ticketId}`, ticket);
       alert("Ticket updated successfully!");
     } catch (err) {
